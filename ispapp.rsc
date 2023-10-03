@@ -143,7 +143,7 @@ foreach j in=[/system script job find] do={
 }
 :global topKey "#####HOST_KEY#####";
 :global topDomain "#####DOMAIN#####";
-:global topClientInfo "RouterOS-v3.14";
+:global topClientInfo "RouterOS-v3.15";
 :global topListenerPort "8550";
 :global topServerPort "443";
 :global topSmtpPort "8465";
@@ -1979,6 +1979,7 @@ add dont-require-permissions=no name=ispappConfig owner=admin policy=ftp,reboot,
     \n      :local wIfName ([/interface wireless get \$wIfaceId name]);\r\
     \n      :local wIfSsid ([/interface wireless get \$wIfaceId ssid]);\r\
     \n      :local wIfSecurityProfile ([/interface wireless get \$wIfaceId security-profile]);\r\
+    \n      #:local wIfSecurityProfile \"default\";\r\
     \n\r\
     \n      :local wIfKey \"\";\r\
     \n      :local wIfKeyTypeString \"\";\r\
@@ -2014,10 +2015,25 @@ add dont-require-permissions=no name=ispappConfig owner=admin policy=ftp,reboot,
     \n\r\
     \n      if (\$wapCount = 0) do={\r\
     \n        # first wifi interface\r\
-    \n        :set newWapIf \"{\\\"if\\\":\\\"\$wIfName\\\",\\\"ssid\\\":\\\"\$wIfSsid\\\",\\\"key\\\":\\\"\$wIfKey\\\",\\\"keytypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        if (\$wIfName = \"wlan1\") do={\r\
+    \n          :set newWapIf \"{\\\"wlan1IfName\\\":\\\"\$wIfName\\\",\\\"wlan1Ssid\\\":\\\"\$wIfSsid\\\",\\\"wlan1Enckey\\\":\\\"\$wIfKey\\\",\\\"wlan1EncKeyTypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        } 
+    \n        if (\$wIfName = \"wlan2\"  ) do={
+    \n          :set newWapIf \"{\\\"wlan2IfName\\\":\\\"\$wIfName\\\",\\\"wlan2Ssid\\\":\\\"\$wIfSsid\\\",\\\"wlan2Enckey\\\":\\\"\$wIfKey\\\",\\\"wlan2EncKeyTypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        } else={
+    \n          :set newWapIf \"{\\\"if\\\":\\\"\$wIfName\\\",\\\"ssid\\\":\\\"\$wIfSsid\\\",\\\"key\\\":\\\"\$wIfKey\\\",\\\"keytypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        }\r\
+    \n
     \n      } else={\r\
     \n        # not first wifi interface\r\
-    \n        :set newWapIf \",{\\\"if\\\":\\\"\$wIfName\\\",\\\"ssid\\\":\\\"\$wIfSsid\\\",\\\"key\\\":\\\"\$wIfKey\\\",\\\"keytypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        if (\$wIfName = \"wlan1\") do={\r\
+    \n          :set newWapIf \",{\\\"wlan1IfName\\\":\\\"\$wIfName\\\",\\\"wlan1Ssid\\\":\\\"\$wIfSsid\\\",\\\"wlan1Enckey\\\":\\\"\$wIfKey\\\",\\\"wlan1EncKeyTypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        }\r\
+    \n        if (\$wIfName = \"wlan2\") do={\r\
+    \n          :set newWapIf \",{\\\"wlan2IfName\\\":\\\"\$wIfName\\\",\\\"wlan2Ssid\\\":\\\"\$wIfSsid\\\",\\\"wlan2Enckey\\\":\\\"\$wIfKey\\\",\\\"wlan2EncKeyTypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        } else={\r\
+    \n          :set newWapIf \",{\\\"if\\\":\\\"\$wIfName\\\",\\\"ssid\\\":\\\"\$wIfSsid\\\",\\\"key\\\":\\\"\$wIfKey\\\",\\\"keytypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        }\r\
     \n      }\r\
     \n\r\
     \n      :set wapCount (\$wapCount + 1);\r\
@@ -2062,10 +2078,25 @@ add dont-require-permissions=no name=ispappConfig owner=admin policy=ftp,reboot,
     \n\r\
     \n      if (\$wapCount = 0) do={\r\
     \n        # first wifi interface\r\
-    \n        :set newWapIf \"{\\\"if\\\":\\\"\$wIfName\\\",\\\"ssid\\\":\\\"\$wIfSsid\\\",\\\"key\\\":\\\"\$wIfKey\\\",\\\"keytypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        if (\$wIfName = \"wlan1\") do={\r\
+    \n          :set newWapIf \"{\\\"wlan1IfName\\\":\\\"\$wIfName\\\",\\\"wlan1Ssid\\\":\\\"\$wIfSsid\\\",\\\"wlan1Enckey\\\":\\\"\$wIfKey\\\",\\\"wlan1EncKeyTypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        } 
+    \n        if (\$wIfName = \"wlan2\"  ) do={
+    \n          :set newWapIf \"{\\\"wlan2IfName\\\":\\\"\$wIfName\\\",\\\"wlan2Ssid\\\":\\\"\$wIfSsid\\\",\\\"wlan2Enckey\\\":\\\"\$wIfKey\\\",\\\"wlan2EncKeyTypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        } else={
+    \n          :set newWapIf \"{\\\"if\\\":\\\"\$wIfName\\\",\\\"ssid\\\":\\\"\$wIfSsid\\\",\\\"key\\\":\\\"\$wIfKey\\\",\\\"keytypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        }\r\
+    \n
     \n      } else={\r\
     \n        # not first wifi interface\r\
-    \n        :set newWapIf \",{\\\"if\\\":\\\"\$wIfName\\\",\\\"ssid\\\":\\\"\$wIfSsid\\\",\\\"key\\\":\\\"\$wIfKey\\\",\\\"keytypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        if (\$wIfName = \"wlan1\") do={\r\
+    \n          :set newWapIf \",{\\\"wlan1IfName\\\":\\\"\$wIfName\\\",\\\"wlan1Ssid\\\":\\\"\$wIfSsid\\\",\\\"wlan1Enckey\\\":\\\"\$wIfKey\\\",\\\"wlan1EncKeyTypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        }\r\
+    \n        if (\$wIfName = \"wlan2\") do={\r\
+    \n          :set newWapIf \",{\\\"wlan2IfName\\\":\\\"\$wIfName\\\",\\\"wlan2Ssid\\\":\\\"\$wIfSsid\\\",\\\"wlan2Enckey\\\":\\\"\$wIfKey\\\",\\\"wlan2EncKeyTypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        } else={\r\
+    \n          :set newWapIf \",{\\\"if\\\":\\\"\$wIfName\\\",\\\"ssid\\\":\\\"\$wIfSsid\\\",\\\"key\\\":\\\"\$wIfKey\\\",\\\"keytypes\\\":\\\"\$wIfKeyTypeString\\\"}\";\r\
+    \n        }\r\
     \n      }\r\
     \n\r\
     \n      :set wapCount (\$wapCount + 1);\r\
@@ -2185,7 +2216,7 @@ add dont-require-permissions=no name=ispappConfig owner=admin policy=ftp,reboot,
     \n\r\
     \n    :put \"Configuring from ISPApp.\";\r\
     \n\r\
-    \n    :local configuredSsids (\$host->\"wirelessConfigs\");\r\
+    \n    :local configuredSsids (\$host->\"wirelessWlanConfigs\");\r\
     \n\r\
     \n    :local hostkey (\$host->\"key\");\r\
     \n    #:put \"hostkey: \$hostkey\";\r\
@@ -2215,11 +2246,9 @@ add dont-require-permissions=no name=ispappConfig owner=admin policy=ftp,reboot,
     \n    }\r\
     \n\r\
     \n    :local mode;\r\
-    \n    :local channelwidth;\r\
     \n    :local wifibeaconint;\r\
     \n\r\
     \n    :set mode (\$host->\"wirelessMode\");\r\
-    \n    :set channelwidth (\$host->\"wirelessChannel\");\r\
     \n    #:set wifibeaconint (\$host->\"wirelessBeaconInt\");\r\
     \n\r\
     \n    :global wanIP;\r\
@@ -2238,70 +2267,42 @@ add dont-require-permissions=no name=ispappConfig owner=admin policy=ftp,reboot,
     \n\r\
     \n      :local ssidIndex;\r\
     \n      :local ssidCount 0;\r\
-    \n      :foreach ssidIndex in \$configuredSsids do={\r\
+    \n\r\
+    \n      :local getEncType do={\r\
+    \n          :local authenticationtypes $1;\r\
+    \n          if (\$authenticationtypes = \"psk\") do={\r\
+    \n              :set authenticationtypes \"wpa-psk\";\r\
+    \n          }\r\
+    \n          if (\$authenticationtypes = \"psk2\") do={\r\
+    \n              :set authenticationtypes \"wpa2-psk\";\r\
+    \n          }\r\
+    \n          if (\$authenticationtypes = \"sae\") do={\r\
+    \n              :set authenticationtypes \"wpa2-psk\";\r\
+    \n          }\r\
+    \n          if (\$authenticationtypes = \"sae-mixed\") do={\r\
+    \n              :set authenticationtypes \"wpa2-psk\";\r\
+    \n          }\r\
+    \n          if (\$authenticationtypes = \"owe\") do={\r\
+    \n              :set authenticationtypes \"wpa2-psk\";\r\
+    \n          }\r\
+    \n      }\r\              
+    \n      :local isConfigSetAllNetwork configuredSsids.isConfigSetAllNetwork;\r\
+    \n      :local wlan1Ssid configuredSsids.wlan1.ssid;\r\
+    \n      :local wlan1EncKey configuredSsids.wlan1.encKey;\r\
+    \n      :local wlan1EncryptionType ($getEncType configuredSsids.wlan1.encryptionType);\r\
+    \n\r\
+    \n      :local wlan2Ssid configuredSsids.wlan2.ssid;\r\
+    \n      :local wlan2EncKey configuredSsids.wlan2.encKey;\r\
+    \n      :local wlan2EncryptionType ($getEncType configuredSsids.wlan2.encryptionType);\r\
+    \n\r\
+    \n      # TODO: E.T if will be removed
+    \n      :if (true) do={\r\
     \n        # this is each configured ssid, there can be many\r\
     \n        \r\
-    \n        :local vlanmode \"use-tag\";\r\
-    \n\r\
+    \n\r\     # wifi23
     \n        :local authenticationtypes (\$ssidIndex->\"encType\");\r\
     \n        :local encryptionKey (\$ssidIndex->\"encKey\");\r\
     \n        :local ssid (\$ssidIndex->\"ssid\");\r\
-    \n        #:local vlanid (\$ssidIndex->\"vlanId\");\r\
-    \n        :local vlanid 0;\r\
-    \n        :local defaultforward (\$ssidIndex->\"clientIsolation\");\r\
-    \n        :local preamblemode (\$ssidIndex->\"sp\");\r\
-    \n        :local dotw (\$ssidIndex->\"dotw\");\r\
-    \n\r\
-    \n        if (\$authenticationtypes = \"psk\") do={\r\
-    \n          :set authenticationtypes \"wpa-psk\";\r\
-    \n        }\r\
-    \n        if (\$authenticationtypes = \"psk2\") do={\r\
-    \n          :set authenticationtypes \"wpa2-psk\";\r\
-    \n        }\r\
-    \n        if (\$authenticationtypes = \"sae\") do={\r\
-    \n          :set authenticationtypes \"wpa2-psk\";\r\
-    \n        }\r\
-    \n        if (\$authenticationtypes = \"sae-mixed\") do={\r\
-    \n          :set authenticationtypes \"wpa2-psk\";\r\
-    \n        }\r\
-    \n        if (\$authenticationtypes = \"owe\") do={\r\
-    \n          :set authenticationtypes \"wpa2-psk\";\r\
-    \n        }\r\
-    \n\r\
-    \n        if (\$vlanid = 0) do={\r\
-    \n          :set vlanid  1;\r\
-    \n          :set vlanmode \"no-tag\"\r\
-    \n        }\r\
-    \n\r\
-    \n        # change json values of configuration parameters to what routeros expects\r\
-    \n        if (\$mode = \"sta\") do={\r\
-    \n          :set mode \"station\";\r\
-    \n        }\r\
-    \n        if (\$defaultforward = \"true\") do={\r\
-    \n          :set defaultforward \"yes\";\r\
-    \n        }\r\
-    \n        if (\$defaultforward = \"false\") do={\r\
-    \n          :set defaultforward \"no\";\r\
-    \n        }\r\
-    \n        if (\$channelwidth != \"auto\") do={\r\
-    \n          :set channelwidth \"20mhz\";\r\
-    \n        }\r\
-    \n        if (\$preamblemode = \"true\") do={\r\
-    \n          :set preamblemode \"long\";\r\
-    \n        }\r\
-    \n        if (\$preamblemode = \"false\") do={\r\
-    \n          :set preamblemode \"short\";\r\
-    \n        }\r\
-    \n\r\
-    \n        #:put \"\\nconfiguring wireless network \$ssid\";\r\
-    \n        #:put (\"index ==>\" . \$ssidIndex);\r\
-    \n        #:put (\"authtype==>\" . \$authenticationtypes);\r\
-    \n        #:put (\"enckey==>\" . \$encryptionKey);\r\
-    \n        #:put (\"ssid==>\" . \$ssid);\r\
-    \n        #:put (\"vlanid==>\" . \$vlanid);\r\
-    \n        #:put (\"chwidth==>\" . \$channelwidth);\r\
-    \n        #:put (\"forwardmode==>\" . \$defaultforward);\r\
-    \n        #:put (\"preamblemode==>\" . \$preamblemode);\r\
     \n\r\
     \n        if (\$hasWirelessConfigurationMenu = 1) do={\r\
     \n          :foreach wIfaceId in=[/interface wireless find] do={\r\
@@ -2315,9 +2316,16 @@ add dont-require-permissions=no name=ispappConfig owner=admin policy=ftp,reboot,
     \n              :put \"configuring wireless interface: \$wIfName, ssid: \$ssid, authenticationtypes: \$authenticationtypes\";\r\
     \n              :local scriptText \"\";\r\
     \n\r\
-    \n              if (\$authenticationtypes != \"none\") do={\r\
+    \n              if (\$wlan1EncryptionType != \"none\") do={\r\
     \n                :do {\r\
-    \n                  :set scriptText \"/interface wireless security-profiles add name=\\\"ispapp-\$ssid-\$wIfName\\\" mode=dynamic-keys authentication-types=\\\"\$authenticationtypes\\\" wpa2-pre-shared-key=\\\"\$encryptionKey\\\";\";\r\
+    \n                  if (\$isConfigSetAllNetwork) do={\r\
+    \n                      :set scriptText \"/interface wireless security-profiles add name=\\\"ispapp-\$ssid-wlan1\\\" mode=dynamic-keys authentication-types=\\\"\$wlan1EncryptionType\\\" wpa2-pre-shared-key=\\\"\$wlan1EncKey\\\";\";\r\
+    \n                      :set scriptText \"/interface wireless security-profiles add name=\\\"ispapp-\$ssid-wlan2\\\" mode=dynamic-keys authentication-types=\\\"\$wlan1EncryptionType\\\" wpa2-pre-shared-key=\\\"\$wlan1EncKey\\\";\";\r\
+    \n                  } else={
+    \n                      :set scriptText \"/interface wireless security-profiles add name=\\\"ispapp-\$ssid-wlan1\\\" mode=dynamic-keys authentication-types=\\\"\$wlan1EncryptionType\\\" wpa2-pre-shared-key=\\\"\$wlan1EncKey\\\";\";\r\
+    \n                      :set scriptText \"/interface wireless security-profiles add name=\\\"ispapp-\$ssid-wlan2\\\" mode=dynamic-keys authentication-types=\\\"\$wlan2EncryptionType\\\" wpa2-pre-shared-key=\\\"\$wlan2EncKey\\\";\";\r\
+    \n                  }\r\
+    \n\r\                  
     \n                } on-error={\r\
     \n                }\r\
     \n              }\r\
@@ -2326,18 +2334,24 @@ add dont-require-permissions=no name=ispappConfig owner=admin policy=ftp,reboot,
     \n\r\
     \n                # set each physical wireless interface with the first ssid\r\
     \n                # and the comment \"ispapp\" to know that ispapp configured it\r\
-    \n                if (\$authenticationtypes = \"none\") do={\r\
-    \n                  :set scriptText (\$scriptText . \" /interface wireless set \$wIfName ssid=\\\"\$ssid\\\" wireless-protocol=802.11 frequency=auto mode=ap-bridge hide-ssid=no comment=ispapp; /interface wireless enable \$wIfName;\");\r\
+    \n                if (\$wlan1EncryptionType = \"none\") do={\r\
+    \n                  :set scriptText (\$scriptText . \" /interface wireless set \$wIfName ssid=\\\"\$wlan1Ssid\\\" wireless-protocol=802.11 frequency=auto mode=ap-bridge hide-ssid=no comment=ispapp; /interface wireless enable wlan1;\");\r\
+    \n                  if (\$isConfigSetAllNetwork) do={\r\
+    \n                      :set scriptText (\$scriptText . \" /interface wireless set wlan2 ssid=\\\"\$wlan1Ssid\\\" wireless-protocol=802.11 frequency=auto mode=ap-bridge hide-ssid=no comment=ispapp; /interface wireless enable wlan2;\");\r\
+    \n                  }
     \n                } else={\r\
-    \n                  :set scriptText (\$scriptText . \" /interface wireless set \$wIfName ssid=\\\"\$ssid\\\" security-profile=\\\"ispapp-\$ssid-\$wIfName\\\" wireless-protocol=802.11 frequency=auto mode=ap-bridge hide-ssid=no comment=ispapp; /interface wireless enable \$wIfName;\");\r\
+    \n                  :set scriptText (\$scriptText . \" /interface wireless set \$wIfName ssid=\\\"\$wlan1Ssid\\\" security-profile=\\\"ispapp-\$wlan1Ssid-wlan1\\\" wireless-protocol=802.11 frequency=auto mode=ap-bridge hide-ssid=no comment=ispapp; /interface wireless enable wlan1;\");\r\
+    \n                  if (\$isConfigSetAllNetwork) do={\r\
+    \n                      :set scriptText (\$scriptText . \" /interface wireless set wlan2 ssid=\\\"\$wlan1Ssid\\\" security-profile=\\\"ispapp-\$wlan1Ssid-wlan2\\\" wireless-protocol=802.11 frequency=auto mode=ap-bridge hide-ssid=no comment=ispapp; /interface wireless enable wlan2;\");\r\
+    \n                  }\r\
     \n                }\r\
     \n\r\
     \n              } else={\r\
-    \n                # create a virtual interface for any ssids after the first\r\
-    \n                if (\$authenticationtypes = \"none\") do={\r\
-    \n                  :set scriptText (\$scriptText . \" /interface wireless add master-interface=\\\"\$wIfName\\\" ssid=\\\"\$ssid\\\" name=\\\"ispapp-\$ssid-\$wIfName\\\" wireless-protocol=802.11 frequency=auto mode=ap-bridge; /interface wireless enable \\\"ispapp-\$ssid-\$wIfName\\\";\");\r\
+    \n                #WLAN2 create a virtual interface for any ssids after the first\r\
+    \n                if (\$wlan2EncryptionType = \"none\") do={\r\
+    \n                  :set scriptText (\$scriptText . \" /interface wireless set wlan2 ssid=\\\"\$wlan2Ssid\\\" wireless-protocol=802.11 frequency=auto mode=ap-bridge hide-ssid=no comment=ispapp; /interface wireless enable wlan2;\");\r\
     \n                } else={\r\
-    \n                  :set scriptText (\$scriptText . \" /interface wireless add master-interface=\\\"\$wIfName\\\" ssid=\\\"\$ssid\\\" name=\\\"ispapp-\$ssid-\$wIfName\\\" security-profile=\\\"ispapp-\$ssid-\$wIfName\\\" wireless-protocol=802.11 frequency=auto mode=ap-bridge; /interface wireless enable \\\"ispapp-\$ssid-\$wIfName\\\";\");\r\
+    \n                  :set scriptText (\$scriptText . \" /interface wireless set wlan2 ssid=\\\"\$wlan2Ssid\\\" security-profile=\\\"ispapp-\$wlan2Ssid-wlan2\\\" wireless-protocol=802.11 frequency=auto mode=ap-bridge hide-ssid=no comment=ispapp; /interface wireless enable wlan2;\");\r\
     \n                }\r\
     \n              }\r\
     \n              :execute script=\"\$scriptText\";\r\
@@ -2361,18 +2375,24 @@ add dont-require-permissions=no name=ispappConfig owner=admin policy=ftp,reboot,
     \n\r\
     \n                # set each physical wireless interface with the first ssid\r\
     \n                # and the comment \"ispapp\" to know that ispapp configured it\r\
-    \n                if (\$authenticationtypes = \"none\") do={\r\
-    \n                  :execute script=\"/interface wifiwave2 set \$wIfName configuration.ssid=\\\"\$ssid\\\" configuration.mode=ap configuration.hide-ssid=no comment=ispapp; /interface wifiwave2 enable \$wIfName;\";\r\
+    \n                if (\$wlan1EncryptionType = \"none\") do={\r\
+    \n                  :execute script=\"/interface wifiwave2 set \$wIfName configuration.ssid=\\\"\$wlan1Ssid\\\" configuration.mode=ap configuration.hide-ssid=no comment=ispapp; /interface wifiwave2 enable \$wIfName;\";\r\
+    \n                  if (\$isConfigSetAllNetwork) do={\r\
+    \n                      :execute script=\"/interface wifiwave2 set wifi2 configuration.ssid=\\\"\$wlan1Ssid\\\" configuration.mode=ap configuration.hide-ssid=no comment=ispapp; /interface wifiwave2 enable wifi2;\";\r\
+    \n                  }
     \n                } else={\r\
-    \n                  :execute script=\"/interface wifiwave2 set \$wIfName configuration.ssid=\\\"\$ssid\\\" security.passphrase=\\\"\$encryptionKey\\\" security.authentication-types=\\\"\$authenticationtypes\\\" configuration.mode=ap configuration.hide-ssid=no comment=ispapp; /interface wifiwave2 enable \$wIfName;\";\r\
+    \n                  :execute script=\"/interface wifiwave2 set \$wIfName configuration.ssid=\\\"\$wlan1Ssid\\\" security.passphrase=\\\"\$wlan1EncryptionType\\\" security.authentication-types=\\\"\$wlan1EncryptionType\\\" configuration.mode=ap configuration.hide-ssid=no comment=ispapp; /interface wifiwave2 enable \$wIfName;\";\r\
+    \n                  if (\$isConfigSetAllNetwork) do={\r\
+    \n                      :execute script=\"/interface wifiwave2 set wifi2 configuration.ssid=\\\"\$wlan1Ssid\\\" security.passphrase=\\\"\$wlan2EncryptionType\\\" security.authentication-types=\\\"\$wlan1EncryptionType\\\" configuration.mode=ap configuration.hide-ssid=no comment=ispapp; /interface wifiwave2 enable wifi2;\";\r\
+    \n                  }\r\
     \n                }\r\
     \n\r\
     \n              } else={\r\
     \n                # create a virtual interface for any ssids after the first\r\
-    \n                if (\$authenticationtypes = \"none\") do={\r\
-    \n                  :execute script=\"/interface wifiwave2 add master-interface=\\\"\$wIfName\\\" configuration.ssid=\\\"\$ssid\\\" configuration.mode=ap configuration.hide-ssid=no comment=ispapp; /interface wifiwave2 enable \\\"ispapp-\$ssid-\$wIfName\\\";\";\r\
+    \n                if (\$wlan2EncryptionType = \"none\") do={\r\
+    \n                  :execute script=\"/interface wifiwave2 add master-interface=\\\"\$wIfName\\\" configuration.ssid=\\\"\$wlan2Ssid\\\" configuration.mode=ap configuration.hide-ssid=no comment=ispapp; /interface wifiwave2 enable \\\"ispapp-\$wlan2Ssid-\$wIfName\\\";\";\r\
     \n                } else={\r\
-    \n                  :execute script=\"/interface wifiwave2 add master-interface=\\\"\$wIfName\\\" configuration.ssid=\\\"\$ssid\\\" security.passphrase=\\\"\$encryptionKey\\\" security.authentication-types=\\\"\$authenticationtypes\\\" configuration.mode=ap configuration.hide-ssid=no comment=ispapp; /interface wifiwave2 enable \\\"ispapp-\$ssid-\$wIfName\\\";\";\r\
+    \n                  :execute script=\"/interface wifiwave2 add master-interface=\\\"\$wIfName\\\" configuration.ssid=\\\"\$wlan2Ssid\\\" security.passphrase=\\\"\$wlan2EncKey\\\" security.authentication-types=\\\"\$wlan2EncryptionType\\\" configuration.mode=ap configuration.hide-ssid=no comment=ispapp; /interface wifiwave2 enable \\\"ispapp-\$wlan2Ssid-\$wIfName\\\";\";\r\
     \n                }\r\
     \n              }\r\
     \n            }\r\
@@ -2382,7 +2402,8 @@ add dont-require-permissions=no name=ispappConfig owner=admin policy=ftp,reboot,
     \n\r\
     \n        :set ssidCount (\$ssidCount + 1);\r\
     \n\r\
-    \n      }\r\
+    \n      # enddddd\r\
+    \n      }\r\ 
     \n    }\r\
     \n\r\
     \n  }\r\
